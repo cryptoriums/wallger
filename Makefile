@@ -84,16 +84,12 @@ lint: go-lint shell-lint
 #      --mem-profile-path string   Path to memory profile output file
 # to debug big allocations during linting.
 .PHONY: go-lint
-go-lint: check-git deps $(GOLANGCI_LINT) $(FAILLINT) $(MISSPELL)
+go-lint: check-git deps
 	@echo ">> verifying modules being imported"
-	@$(FAILLINT) -paths "errors=github.com/pkg/errors" ./...
-	@$(FAILLINT) -paths "fmt.{Print,Printf,Println,Sprint}" -ignore-tests ./...
+	@faillint -paths "errors=github.com/pkg/errors" ./...
+	@faillint -paths "fmt.{Print,Printf,Println,Sprint}" -ignore-tests ./...
 	@echo ">> linting all of the Go files GOGC=${GOGC}"
-	@$(GOLANGCI_LINT) run
-	@echo ">> detecting misspells"
-	@find . -type f | grep -v tmp | grep -v node_modules | grep -v contracts | grep -v go.sum | grep -vE '\./\..*' | xargs $(MISSPELL) -error
-	@echo ">> ensuring Copyright headers"
-	@go run ./scripts/copyright
+	@golangci-lint run
 	$(call require_clean_work_tree,'detected file changes, run make lint and commit changes')
 
 .PHONY:shell-lint
@@ -125,7 +121,8 @@ lint-ci: build-prepare lint
 
 .PHONY: install-deps
 install-deps:
-	npm install --save-dev
+	go install github.com/fatih/faillint@latest
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
 
 .PHONY: build-prepare
 build-prepare:

@@ -262,7 +262,9 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 			}
 			err = client.SendTransaction(ctx, tx)
 			if err != nil {
-				return errors.Wrap(err, "SendTransaction")
+				fmt.Println("SendTransaction", "err", err.Error())
+				continue
+
 			}
 		} else {
 			erc20I, err := interfaces.NewIERC20(token.Address[client.NetworkID()], client)
@@ -287,7 +289,8 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 			}
 			tx, err = erc20I.Transfer(opts, receiverAcc.Pub, big_p.FloatToBigIntMul(amount, params.Ether))
 			if err != nil {
-				return errors.Wrap(err, "Transfer")
+				fmt.Println("Transfer", "err", err.Error())
+				continue
 			}
 
 		}

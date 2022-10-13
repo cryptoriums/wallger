@@ -287,7 +287,7 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 			if err != nil {
 				return errors.Wrap(err, "NewTxOpts")
 			}
-			tx, err = erc20I.Transfer(opts, receiverAcc.Pub, big_p.FloatToBigIntMul(amount, params.Ether))
+			tx, err = erc20I.Transfer(opts, receiverAcc.Pub, big_p.FromFloatMul(amount, params.Ether))
 			if err != nil {
 				fmt.Println("Transfer", "err", err.Error())
 				continue

@@ -118,7 +118,7 @@ func (self *CancelTxCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) e
 		}
 	}
 
-	gasPrice := big_p.BigIntToFloatDiv(tx.GasPrice(), params.GWei)
+	gasPrice := big_p.ToFloatDiv(tx.GasPrice(), params.GWei)
 
 	nonce, err := client.NonceAt(ctx, acc.PublicKey, nil)
 	if err != nil {

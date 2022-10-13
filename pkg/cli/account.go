@@ -308,7 +308,7 @@ func (self *AccountBalanceCmd) Run(cli *CLI, ctx context.Context, logger log.Log
 				return errors.Wrap(err, "erc20I.BalanceOf")
 			}
 		}
-		fmt.Println(strconv.Itoa(i) + ": " + account.Pub.Hex() + " " + fmt.Sprintf("%.6f", big_p.BigIntToFloatDiv(balance, params.Ether)) + " " + strings.Join(account.Tags, ","))
+		fmt.Println(strconv.Itoa(i) + ": " + account.Pub.Hex() + " " + fmt.Sprintf("%.6f", big_p.ToFloatDiv(balance, params.Ether)) + " " + strings.Join(account.Tags, ","))
 
 	}
 
@@ -327,7 +327,7 @@ func (self *AccountBalanceCmd) Run(cli *CLI, ctx context.Context, logger log.Log
 			}
 		}
 
-		fmt.Println(strconv.Itoa(i) + ": " + contract.Address.Hex() + " " + fmt.Sprintf("%.6f", big_p.BigIntToFloatDiv(balance, params.Ether)) + " " + strings.Join(contract.Tags, ","))
+		fmt.Println(strconv.Itoa(i) + ": " + contract.Address.Hex() + " " + fmt.Sprintf("%.6f", big_p.ToFloatDiv(balance, params.Ether)) + " " + strings.Join(contract.Tags, ","))
 	}
 	return nil
 }

@@ -95,7 +95,7 @@ func (self *SetOwnerCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) e
 
 		anotherRun, err := prompt.Stdin.PromptConfirm("Another run?")
 		if err != nil {
-			return errors.Wrap(err, "prompt for another transfer")
+			return errors.Wrap(err, "prompt for another run")
 		}
 		if !anotherRun {
 			break

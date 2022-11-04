@@ -3,11 +3,11 @@ module github.com/cryptoriums/wallger
 go 1.18
 
 require (
-	github.com/alecthomas/kong v0.5.1-0.20220518080721-195d56c42e0f
+	github.com/alecthomas/kong v0.7.0
 	github.com/btcsuite/btcd v0.22.0-beta.0.20220330201728-074266215c26
 	github.com/btcsuite/btcd/btcutil v1.1.1
 	github.com/cryptoriums/packages v0.0.0-20220529143219-92e77e6cf241
-	github.com/ethereum/go-ethereum v1.10.19-0.20220526072637-0287e1a7c00c
+	github.com/ethereum/go-ethereum v1.10.25
 	github.com/go-kit/log v0.2.1
 	github.com/jinzhu/copier v0.3.6-0.20220210061904-7948fe2be217
 	github.com/pkg/errors v0.9.1
@@ -39,7 +39,7 @@ require (
 	github.com/tklauser/numcpus v0.4.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88 // indirect
-	golang.org/x/sys v0.0.0-20220627191245-f75cf1eec38b // indirect
+	golang.org/x/sys v0.0.0-20221013171732-95e765b1cc43 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 )
 

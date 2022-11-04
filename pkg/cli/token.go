@@ -91,26 +91,37 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 
 		var amount float64
 		for {
-			_amount, err := prompt.Stdin.PromptInput(token.Name + " approve limit: ")
+			amount, err = prompt_p.Float(token.Name+" approve limit: ", 0, 1000000)
 			if err != nil {
 				return errors.Wrap(err, "select amount prompt")
 			}
-			amount, err = strconv.ParseFloat(_amount, 64)
-			if err != nil {
-				level.Error(logger).Log("msg", "casting input to float", "err", err)
-				continue
-			}
-
 			break
 		}
 
-		proxy, _, err := prompt_p.Contract(e.Contracts, false, false)
-		if err != nil {
-			return errors.Wrap(err, "selectProxy")
+		var erc20I *interfaces.IERC20
+
+		tokenAddr, ok := token.Address[client.NetworkID()]
+		if !ok {
+			return errors.Errorf("unknown token address for network:%v", client.NetworkID())
 		}
-		erc20I, err := interfaces.NewIERC20(*proxy, client)
+		erc20I, err = interfaces.NewIERC20(tokenAddr, client)
 		if err != nil {
-			return errors.Wrap(err, "NewIERC20 through a proxy")
+			return errors.Wrap(err, "NewIERC20")
+		}
+
+		useProxy, err := prompt.Stdin.PromptConfirm("use proxy?")
+		if err != nil {
+			return errors.Wrap(err, "select proxy")
+		}
+		if useProxy {
+			contract, _, err := prompt_p.Contract(e.Contracts, false, false)
+			if err != nil {
+				return errors.Wrap(err, "select contract")
+			}
+			erc20I, err = interfaces.NewIERC20(*contract, client)
+			if err != nil {
+				return errors.Wrap(err, "NewIERC20 through a proxy")
+			}
 		}
 
 		gasPrice, err := prompt_p.Float("enter TX gas price(gwei): ", 0, 300)

@@ -134,8 +134,8 @@ func (self *CancelTxCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) e
 		"",
 		nil,
 		300_000,
-		gasPrice+1,
-		gasPrice+1,
+		gasPrice*1.1,
+		gasPrice*1.1,
 		0,
 	)
 	if err != nil {

@@ -13,10 +13,9 @@ import (
 	client_p "github.com/cryptoriums/packages/client"
 	"github.com/cryptoriums/packages/contracts/bindings/interfaces"
 	"github.com/cryptoriums/packages/env"
-	prompt_p "github.com/cryptoriums/packages/prompt"
+	"github.com/cryptoriums/packages/prompt"
 	tx_p "github.com/cryptoriums/packages/tx"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/console/prompt"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/go-kit/log"
@@ -33,12 +32,12 @@ type TokenCmd struct {
 type TokenApproveCmd struct{}
 
 func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return err
 	}
 
-	_tags, err := prompt.Stdin.Prompt("enter tags separated by a comma: ")
+	_tags, err := prompt.PromptInput("enter tags separated by a comma: ")
 	if err != nil {
 		return errors.Wrap(err, "prompt tags")
 	}
@@ -54,7 +53,7 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 		return errors.Wrap(err, "NewClientCachedNetID")
 	}
 
-	token, err := prompt_p.Token(client.NetworkID())
+	token, err := prompt.Token(client.NetworkID())
 	if err != nil {
 		return errors.Wrap(err, "selectToken")
 	}
@@ -76,7 +75,7 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 
 		var spender common.Address
 		for {
-			_spender, err := prompt.Stdin.PromptInput("Select spender contract: ")
+			_spender, err := prompt.PromptInput("Select spender contract: ")
 			if err != nil {
 				fmt.Println("prompt error for spender contract:", err)
 				continue
@@ -91,7 +90,7 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 
 		var amount float64
 		for {
-			amount, err = prompt_p.Float(token.Name+" approve limit: ", 0, 1000000)
+			amount, err = prompt.Float(token.Name+" approve limit: ", 0, 1000000)
 			if err != nil {
 				return errors.Wrap(err, "select amount prompt")
 			}
@@ -109,12 +108,12 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 			return errors.Wrap(err, "NewIERC20")
 		}
 
-		useProxy, err := prompt.Stdin.PromptConfirm("use proxy?")
+		useProxy, err := prompt.PromptConfirm("use proxy?")
 		if err != nil {
 			return errors.Wrap(err, "select proxy")
 		}
 		if useProxy {
-			contract, _, err := prompt_p.Contract(e.Contracts, false, false)
+			contract, _, err := prompt.Contract(e.Contracts, false, false)
 			if err != nil {
 				return errors.Wrap(err, "select contract")
 			}
@@ -124,7 +123,7 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 			}
 		}
 
-		gasPrice, err := prompt_p.Float("enter TX gas price(gwei): ", 0, 300)
+		gasPrice, err := prompt.Float("enter TX gas price(gwei): ", 0, 300)
 		if err != nil {
 			return err
 		}
@@ -134,11 +133,11 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 			return errors.Wrap(err, "AccountFromPrvKey")
 		}
 
-		nonce, err := prompt_p.Nonce(ctx, client, ethAcc.PublicKey)
+		nonce, err := prompt.Nonce(ctx, client, ethAcc.PublicKey)
 		if err != nil {
 			return errors.Wrap(err, "selectNonce")
 		}
-		confirmed, err := prompt.Stdin.PromptConfirm(fmt.Sprintf("Confirm approve of:%v from:%v, to:%v, amount:%v, gas price:%v", token.Name, senderAcc.Pub, spender, amount, gasPrice))
+		confirmed, err := prompt.PromptConfirm(fmt.Sprintf("Confirm approve of:%v from:%v, to:%v, amount:%v, gas price:%v", token.Name, senderAcc.Pub, spender, amount, gasPrice))
 		if err != nil || !confirmed {
 			return errors.New("canceled")
 		}
@@ -155,7 +154,7 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 
 		fmt.Println("Tx Created", "nonce", nonce, "hash", tx.Hash())
 
-		anotherRun, err := prompt.Stdin.PromptConfirm("Another run?")
+		anotherRun, err := prompt.PromptConfirm("Another run?")
 		if err != nil {
 			return errors.Wrap(err, "prompt for another run")
 		}
@@ -169,12 +168,12 @@ func (self *TokenApproveCmd) Run(cliContext *CLI, ctx context.Context, logger lo
 type TokenTransferCmd struct{}
 
 func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return err
 	}
 
-	_tags, err := prompt.Stdin.Prompt("enter tags separated by a comma: ")
+	_tags, err := prompt.PromptInput("enter tags separated by a comma: ")
 	if err != nil {
 		return errors.Wrap(err, "prompt tags")
 	}
@@ -190,7 +189,7 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 		return errors.Wrap(err, "NewClientCachedNetID")
 	}
 
-	token, err := prompt_p.Token(client.NetworkID())
+	token, err := prompt.Token(client.NetworkID())
 	if err != nil {
 		return errors.Wrap(err, "selectToken")
 	}
@@ -227,7 +226,7 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 
 		var amount float64
 		for {
-			_amount, err := prompt.Stdin.PromptInput(token.Name + " аmount: ")
+			_amount, err := prompt.PromptInput(token.Name + " аmount: ")
 			if err != nil {
 				return errors.Wrap(err, "select amount prompt")
 			}
@@ -240,7 +239,7 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 			break
 		}
 
-		gasPrice, err := prompt_p.Float("enter TX gas price(gwei): ", 0, 300)
+		gasPrice, err := prompt.Float("enter TX gas price(gwei): ", 0, 300)
 		if err != nil {
 			return err
 		}
@@ -250,7 +249,7 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 			return errors.Wrap(err, "AccountFromPrvKey")
 		}
 
-		nonce, err := prompt_p.Nonce(ctx, client, ethAcc.PublicKey)
+		nonce, err := prompt.Nonce(ctx, client, ethAcc.PublicKey)
 		if err != nil {
 			return errors.Wrap(err, "selectNonce")
 		}
@@ -286,7 +285,7 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 				return errors.Wrap(err, "NewIERC20")
 			}
 
-			proxy, _, err := prompt_p.Contract(e.Contracts, false, true)
+			proxy, _, err := prompt.Contract(e.Contracts, false, true)
 			if err != nil {
 				return errors.Wrap(err, "selectProxy")
 			}
@@ -311,7 +310,7 @@ func (self *TokenTransferCmd) Run(cliContext *CLI, ctx context.Context, logger l
 
 		fmt.Println("Tx Created", "nonce", nonce, "hash", tx.Hash())
 
-		anotherRun, err := prompt.Stdin.PromptConfirm("Another run?")
+		anotherRun, err := prompt.PromptConfirm("Another run?")
 		if err != nil {
 			return errors.Wrap(err, "prompt for another run")
 		}

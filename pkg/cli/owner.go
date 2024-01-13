@@ -8,9 +8,8 @@ import (
 	client_p "github.com/cryptoriums/packages/client"
 	"github.com/cryptoriums/packages/contracts/bindings/interfaces"
 	"github.com/cryptoriums/packages/env"
-	prompt_p "github.com/cryptoriums/packages/prompt"
+	"github.com/cryptoriums/packages/prompt"
 	tx_p "github.com/cryptoriums/packages/tx"
-	"github.com/ethereum/go-ethereum/console/prompt"
 
 	"github.com/go-kit/log"
 	"github.com/pkg/errors"
@@ -19,11 +18,11 @@ import (
 type SetOwnerCmd struct{}
 
 func (self *SetOwnerCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return err
 	}
-	_tags, err := prompt.Stdin.Prompt("enter tags separated by a comma: ")
+	_tags, err := prompt.PromptInput("enter tags separated by a comma: ")
 	if err != nil {
 		return errors.Wrap(err, "prompt tags")
 	}
@@ -62,7 +61,7 @@ func (self *SetOwnerCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) e
 			return errors.Wrap(err, "SelectAccount receiver")
 		}
 
-		conract, _, err := prompt_p.Contract(envr.Contracts, false, false)
+		conract, _, err := prompt.Contract(envr.Contracts, false, false)
 		if err != nil {
 			return errors.Wrap(err, "selectProxy")
 		}
@@ -72,12 +71,12 @@ func (self *SetOwnerCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) e
 			return errors.Wrap(err, "NewIERC20")
 		}
 
-		nonce, err := prompt_p.Nonce(ctx, client, currentOwner.Pub)
+		nonce, err := prompt.Nonce(ctx, client, currentOwner.Pub)
 		if err != nil {
 			return errors.Wrap(err, "selectNonce")
 		}
 
-		gasPrice, err := prompt_p.Float("enter TX gas price(gwei): ", 0, 300)
+		gasPrice, err := prompt.Float("enter TX gas price(gwei): ", 0, 300)
 		if err != nil {
 			return err
 		}
@@ -93,7 +92,7 @@ func (self *SetOwnerCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) e
 
 		fmt.Println("Tx Created", "nonce", nonce, "hash", tx.Hash())
 
-		anotherRun, err := prompt.Stdin.PromptConfirm("Another run?")
+		anotherRun, err := prompt.PromptConfirm("Another run?")
 		if err != nil {
 			return errors.Wrap(err, "prompt for another run")
 		}

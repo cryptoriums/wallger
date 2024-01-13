@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/kong v0.7.0
 	github.com/btcsuite/btcd v0.22.0-beta.0.20220330201728-074266215c26
 	github.com/btcsuite/btcd/btcutil v1.1.1
-	github.com/cryptoriums/packages v0.0.0-20220529143219-92e77e6cf241
+	github.com/cryptoriums/packages v0.0.0-20231229092435-ee431dfd29f1
 	github.com/ethereum/go-ethereum v1.10.25
 	github.com/go-kit/log v0.2.1
 	github.com/jinzhu/copier v0.3.6-0.20220210061904-7948fe2be217

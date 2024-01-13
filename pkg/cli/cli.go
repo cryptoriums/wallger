@@ -16,10 +16,9 @@ import (
 	big_p "github.com/cryptoriums/packages/big"
 	client_p "github.com/cryptoriums/packages/client"
 	"github.com/cryptoriums/packages/env"
-	prompt_p "github.com/cryptoriums/packages/prompt"
+	"github.com/cryptoriums/packages/prompt"
 	tx_p "github.com/cryptoriums/packages/tx"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/console/prompt"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/go-kit/log"
@@ -37,7 +36,7 @@ type Gas struct {
 
 func (self *Gas) Validate() error {
 	if self.GasPrice > 300 {
-		confirmed, err := prompt.Stdin.PromptConfirm(fmt.Sprintf("confirm high gas fee:%v", self.GasPrice))
+		confirmed, err := prompt.PromptConfirm(fmt.Sprintf("confirm high gas fee:%v", self.GasPrice))
 		if err != nil || !confirmed {
 			return errors.New("canceled")
 		}
@@ -60,11 +59,11 @@ type CLI struct {
 type CancelTxCmd struct{}
 
 func (self *CancelTxCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return err
 	}
-	_tags, err := prompt.Stdin.Prompt("enter tags separated by a comma: ")
+	_tags, err := prompt.PromptInput("enter tags separated by a comma: ")
 	if err != nil {
 		return errors.Wrap(err, "prompt tags")
 	}
@@ -80,7 +79,7 @@ func (self *CancelTxCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) e
 		return errors.Wrap(err, "NewClientCachedNetID")
 	}
 
-	hash, err := prompt.Stdin.PromptInput("TX hash to cancel: ")
+	hash, err := prompt.PromptInput("TX hash to cancel: ")
 	if err != nil {
 		return errors.Wrap(err, "TX hash input prompt")
 	}
@@ -159,12 +158,12 @@ type EnvCmd struct {
 type EnvExportCmd struct{}
 
 func (self *EnvExportCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return errors.Wrap(err, "prompt.ReadFile")
 	}
 
-	_tags, err := prompt.Stdin.Prompt("enter tags for objects to be exported separated by a comma: ")
+	_tags, err := prompt.PromptInput("enter tags for objects to be exported separated by a comma: ")
 	if err != nil {
 		return errors.Wrap(err, "prompt tags")
 	}
@@ -175,7 +174,7 @@ func (self *EnvExportCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) 
 		return errors.Wrap(err, "loading env from file")
 	}
 
-	decrypt, err := prompt.Stdin.PromptConfirm("Decrypt env?")
+	decrypt, err := prompt.PromptConfirm("Decrypt env?")
 	if err != nil {
 		return errors.Wrap(err, "prompt decrypt")
 	}
@@ -199,7 +198,7 @@ func (self *EnvExportCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) 
 type EnvEncryptCmd struct{}
 
 func (self *EnvEncryptCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return errors.Wrap(err, "prompt.ReadFile")
 	}
@@ -209,7 +208,7 @@ func (self *EnvEncryptCmd) Run(cli *CLI, ctx context.Context, logger log.Logger)
 		return errors.Wrap(err, "loading env from file")
 	}
 
-	_tags, err := prompt.Stdin.Prompt("enter tags for objects to be encrypted separated by a comma:")
+	_tags, err := prompt.PromptInput("enter tags for objects to be encrypted separated by a comma:")
 	if err != nil {
 		return errors.Wrap(err, "prompt tags")
 	}
@@ -269,7 +268,7 @@ func (self *EnvEncryptCmd) Run(cli *CLI, ctx context.Context, logger log.Logger)
 type EnvReEncryptCmd struct{}
 
 func (self *EnvReEncryptCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return err
 	}
@@ -306,7 +305,7 @@ func (self *EnvReEncryptCmd) Run(cli *CLI, ctx context.Context, logger log.Logge
 type EncryptCmd struct{}
 
 func (self *EncryptCmd) Run(cli *CLI) error {
-	input, err := prompt.Stdin.PromptInput("Input to encrypt: ")
+	input, err := prompt.PromptInput("Input to encrypt: ")
 	if err != nil {
 		return err
 	}
@@ -330,7 +329,7 @@ func (self *EncryptCmd) Run(cli *CLI) error {
 type DecryptCmd struct{}
 
 func (self *DecryptCmd) Run(cli *CLI) error {
-	input, err := prompt.Stdin.PromptInput("Input to decrypt: ")
+	input, err := prompt.PromptInput("Input to decrypt: ")
 	if err != nil {
 		return err
 	}

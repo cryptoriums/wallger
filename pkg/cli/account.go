@@ -16,13 +16,12 @@ import (
 	client_p "github.com/cryptoriums/packages/client"
 	"github.com/cryptoriums/packages/contracts/bindings/interfaces"
 	"github.com/cryptoriums/packages/env"
-	prompt_p "github.com/cryptoriums/packages/prompt"
+	"github.com/cryptoriums/packages/prompt"
 	tx_p "github.com/cryptoriums/packages/tx"
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/console/prompt"
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/params"
@@ -36,7 +35,7 @@ import (
 type AccountImportCmd struct{}
 
 func (self *AccountImportCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return err
 	}
@@ -45,7 +44,7 @@ func (self *AccountImportCmd) Run(cli *CLI, ctx context.Context, logger log.Logg
 		return errors.Wrap(err, "loading env from file")
 	}
 
-	prvKeys, err := prompt.Stdin.PromptInput("Enter private keys separated by a comma: ")
+	prvKeys, err := prompt.PromptInput("Enter private keys separated by a comma: ")
 	if err != nil {
 		return errors.Wrap(err, "private key prompt")
 	}
@@ -69,7 +68,7 @@ func (self *AccountImportCmd) Run(cli *CLI, ctx context.Context, logger log.Logg
 		})
 	}
 
-	yes, err := prompt.Stdin.PromptConfirm("Encrypt the imported account?")
+	yes, err := prompt.PromptConfirm("Encrypt the imported account?")
 	if err != nil {
 		return errors.Wrap(err, "encrypt accounts prompt")
 	}
@@ -114,7 +113,7 @@ type AccountNewCmd struct{}
 func (self *AccountNewCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) error {
 	var count int
 	for {
-		_count, err := prompt.Stdin.PromptInput("How many accounts: ")
+		_count, err := prompt.PromptInput("How many accounts: ")
 		if err != nil {
 			return errors.Wrap(err, "accounts count prompt")
 		}
@@ -125,7 +124,7 @@ func (self *AccountNewCmd) Run(cli *CLI, ctx context.Context, logger log.Logger)
 		level.Error(logger).Log("msg", "casting count input", "err", err)
 	}
 
-	mnemonic, err := prompt.Stdin.PromptInput("Enter mnemonic or leave empty for random accounts: ")
+	mnemonic, err := prompt.PromptInput("Enter mnemonic or leave empty for random accounts: ")
 	if err != nil {
 		return errors.Wrap(err, "accounts count prompt")
 	}
@@ -187,14 +186,14 @@ func (self *AccountNewCmd) Run(cli *CLI, ctx context.Context, logger log.Logger)
 
 	}
 
-	yes, err := prompt.Stdin.PromptConfirm("Add to the env file?")
+	yes, err := prompt.PromptConfirm("Add to the env file?")
 	if err != nil {
 		return errors.Wrap(err, "prompting for adding accounts to the env file")
 	}
 	if !yes {
 		return nil
 	}
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return err
 	}
@@ -203,7 +202,7 @@ func (self *AccountNewCmd) Run(cli *CLI, ctx context.Context, logger log.Logger)
 		return errors.Wrap(err, "loading env from file")
 	}
 
-	yes, err = prompt.Stdin.PromptConfirm("Encrypt new accounts?")
+	yes, err = prompt.PromptConfirm("Encrypt new accounts?")
 	if err != nil {
 		return errors.Wrap(err, "encrypt accounts prompt")
 	}
@@ -264,12 +263,12 @@ func derivePrivateKey(_masterKey *hdkeychain.ExtendedKey, path accounts.Derivati
 type AccountBalanceCmd struct{}
 
 func (self *AccountBalanceCmd) Run(cli *CLI, ctx context.Context, logger log.Logger) error {
-	_, filePath, err := prompt_p.ReadFile()
+	_, filePath, err := prompt.ReadFile()
 	if err != nil {
 		return errors.Wrap(err, "prompt.ReadFile")
 	}
 
-	_tags, err := prompt.Stdin.Prompt("enter tags separated by a comma: ")
+	_tags, err := prompt.PromptInput("enter tags separated by a comma: ")
 	if err != nil {
 		return errors.Wrap(err, "prompt tags")
 	}
@@ -284,7 +283,7 @@ func (self *AccountBalanceCmd) Run(cli *CLI, ctx context.Context, logger log.Log
 	if err != nil {
 		return errors.Wrap(err, "NewClientCachedNetID")
 	}
-	token, err := prompt_p.Token(client.NetworkID())
+	token, err := prompt.Token(client.NetworkID())
 	if err != nil {
 		return errors.Wrap(err, "selectToken")
 	}
